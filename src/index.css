@@ -1,2 +1,4 @@
-@import "tailwindcss";
-@plugin "daisyui";
+@font-face {
+  font-family: "PTSans";
+  src: url("./assets/fonts/PTSans-Regular.ttf") format("truetype");
+}
