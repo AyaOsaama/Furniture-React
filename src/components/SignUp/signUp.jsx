@@ -1,13 +1,20 @@
-import React from "react";
+import React, { useContext } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import background from "./assets/background.png";
 import secondBackground from "./assets/firstBackground.png";
+import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
+import "./assets/auth.css";
+import { Registration } from "../../servicesAuth/authService";
+
+
 
 function SignUp() {
   const [successMessage, setSuccessMessage] = React.useState(null);
   const [errorMessage, setErrorMessage] = React.useState(null);
-
+  const navigate = useNavigate();
+  // const {setAuth}=useContext(AuthContext)
   const formik = useFormik({
     initialValues: {
       name: "",
@@ -30,31 +37,60 @@ function SignUp() {
         )
         .required("Password is required"),
     }),
-    onSubmit: (values, { resetForm }) => {
-      console.log("Form submitted:", values);
-
-      setSuccessMessage("Registration successful!");
-      setErrorMessage(null);
-      resetForm();
-
-      setTimeout(() => {
-        setSuccessMessage(null);
-      }, 3000);
-    },
-  });
-
-  const handleSignIn = (e) => {
-    e.preventDefault();
-    setSuccessMessage(null);
-    setErrorMessage("Invalid credentials, please try again!");
-
+   onSubmit: async (values, { resetForm, setSubmitting }) => {
+  try {
+    const result = await Registration(values); 
+    console.log("Registration successful:", result);
+// localStorage.setItem('token',result.user.accessToken)
+//         setAuth(auth)
+    setSuccessMessage("Registration successful!");
+    setErrorMessage(null);
+    resetForm();
     setTimeout(() => {
-      setErrorMessage(null);
-    }, 3000);
+  navigate("/");
+}, 1000);
+  } catch (error) {
+  setErrorMessage(error?.response?.data?.message || error.message || "Registration failed.");
+  setSuccessMessage(null);
+
+  }finally {
+    setSubmitting(false);
+  }
+
+  
+
+  // بعد 3 ثواني الرسالة تختفي
+
+
+
+  setSubmitting(false); // تفعيل الزرار تاني
+}
+
+  });
+ const handleSignIn = () => {
+    // setSuccessMessage(null);
+    // setErrorMessage(null);
+    navigate("/");
   };
+  // const handleSignIn = (e) => {
+  //   e.preventDefault();
+  //   setSuccessMessage(null);
+  //   setErrorMessage("Invalid credentials, please try again!");
+
+  //   setTimeout(() => {
+  //     setErrorMessage(null);
+  //   }, 3000);
+  // };
 
   return (
-    <div className="flex flex-col md:flex-row w-screen h-screen overflow-y-auto md:overflow-hidden">
+        <motion.div
+      initial={{ opacity: 0, x: -20 }}
+      animate={{ opacity: 1, x: 0 }}
+      exit={{ opacity: 0}}
+      transition={{ duration: 0.4 }}
+      className="no-scrollbar overflow-hidden"
+    >
+<div className="flex flex-col md:flex-row w-screen h-screen overflow-hidden">
       {/* Background for mobile */}
       <div className="relative w-full md:w-2/3 flex items-center justify-center min-h-screen md:h-screen overflow-hidden">
         <div
@@ -197,6 +233,7 @@ function SignUp() {
                 <button
                   onClick={handleSignIn}
                   className="text-blue-600 underline hover:text-blue-800"
+                  type="button"
                 >
                   Sign In
                 </button>
@@ -207,7 +244,7 @@ function SignUp() {
       </div>
 
       {/* Background for larger screens */}
-      <div className="hidden md:block w-full md:w-2/3 h-full">
+      <div className="hidden md:block w-full md:w-2/2 h-full">
         <img
           src={secondBackground}
           alt="Background"
@@ -215,6 +252,7 @@ function SignUp() {
         />
       </div>
     </div>
+    </motion.div>
   );
 }
 

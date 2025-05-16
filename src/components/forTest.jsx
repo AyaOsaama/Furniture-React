@@ -1,9 +1,12 @@
 import React from 'react'
+import { useAuth } from '../contextAuth/AuthContext.jsx'
 
-function forTest() {
+function ForTest() {
+  const { user } = useAuth();
+
   return (
-    <div>forTest</div>
+    <div>ForTest</div>
   )
 }
 
-export default forTest
+export default ForTest

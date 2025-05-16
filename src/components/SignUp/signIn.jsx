@@ -1,18 +1,27 @@
-import React from "react";
+import React, { use } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import background from "./assets/background.png";
 import secondBackground from "./assets/firstBackground.png";
+import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
+import { Login } from "../../servicesAuth/authService";
+import { useAuth } from "../../contextAuth/AuthContext";
+
 
 function SignIn() {
   const [successMessage, setSuccessMessage] = React.useState(null);
   const [errorMessage, setErrorMessage] = React.useState(null);
+const navigate = useNavigate();
+const {login}=useAuth();
+
+
 
   const formik = useFormik({
     initialValues: {
       email: "",
       password: "",
-      remember: true, // Add remember me state
+      remember: true, 
     },
     validationSchema: Yup.object({
       email: Yup.string()
@@ -20,34 +29,62 @@ function SignIn() {
         .required("Email is required"),
       password: Yup.string().required("Password is required"),
     }),
-    onSubmit: (values, { resetForm, setSubmitting }) => {
-      console.log("Form submitted:", values);
+onSubmit: async (values, { resetForm, setSubmitting }) => {
+  try {
+    const result = await Login(values); 
+    console.log("Login successful:", result);
 
-      // simulate login
-      if (
-        values.email === "test@example.com" &&
-        values.password === "Test@1234"
-      ) {
-        setSuccessMessage("Login successful!");
-        setErrorMessage(null);
-        resetForm(); // Reset form on successful login
-      } else {
-        setErrorMessage("Invalid email or password.");
-        setSuccessMessage(null);
-      }
+if (result.token) {
+  login(result); 
+  navigate("/test");
+}
 
-      // Reset success/error messages after 3 seconds
-      setTimeout(() => {
-        setSuccessMessage(null);
-        setErrorMessage(null);
-      }, 3000);
 
-      setSubmitting(false);
-    },
+    setSuccessMessage("Login successful!");
+    setErrorMessage(null);
+    resetForm();
+    
+  } catch (error) {
+  const msg =
+    error?.response?.data?.message ||
+    error?.message ||
+    "Invalid email or password.";
+
+  if (msg.toLowerCase().includes("confirm your email")) {
+    setErrorMessage("Please verify your email before logging in.");
+  } else {
+    setErrorMessage(msg);
+  }
+
+
+  setSuccessMessage(null);
+}
+finally {
+    setSubmitting(false);
+  }
+
+  setTimeout(() => {
+    setSuccessMessage(null);
+    setErrorMessage(null);
+  }, 3000);
+}
+
   });
+   const handleSignUp = () => {
+    // setSuccessMessage(null);
+    // setErrorMessage(null);
+    navigate("/signup");
+  };
 
   return (
-    <div className="flex flex-col md:flex-row w-screen h-screen overflow-y-auto md:overflow-hidden">
+    <motion.div
+  initial={{ opacity: 0 ,x:-20}}
+  animate={{ opacity: 1 ,x:0}}
+  exit={{ opacity: 0 }}
+  transition={{ duration: 0.4 }}
+  className="no-scrollbar overflow-hidden"
+>
+<div className="flex flex-col md:flex-row w-screen h-screen overflow-hidden">
       {/* Left side - Form + خلفية في الموبايل */}
       <div className="relative w-full md:w-2/3 flex items-center justify-center min-h-screen md:h-screen overflow-hidden">
         {/* الخلفية في الشاشات الصغيرة */}
@@ -183,12 +220,14 @@ function SignIn() {
             <div className="w-full flex justify-center mb-10 md:mb-0 mt-10">
               <p className="font-sans font-bold text-sm text-center px-10">
                 Don’t have an account?{" "}
-                <a
-                  href="#"
+                <button
                   className="text-blue-600 underline hover:text-blue-800"
+                  onClick={handleSignUp}
+                  type="button"
                 >
                   Sign Up
-                </a>
+                </button>
+
               </p>
             </div>
           </form>
@@ -204,6 +243,7 @@ function SignIn() {
         />
       </div>
     </div>
+      </motion.div>
   );
 }
 
