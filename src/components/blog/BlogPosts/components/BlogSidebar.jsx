@@ -1,0 +1,85 @@
+import React from "react";
+import { CiHeart } from "react-icons/ci";
+import { RiSearch2Line } from "react-icons/ri";
+
+const BlogSidebar = ({ posts, searchTerm, onSearchChange }) => {
+  // Get 3 most recent posts
+  const recentPosts = [...posts]
+    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+    .slice(0, 3);
+
+  return (
+    <div className="lg:w-1/4 lg:order-2 order-1">
+      <div className="lg:sticky lg:top-8 space-y-6">
+        <div className="relative">
+          <input
+            type="text"
+            placeholder="Search..."
+            className="w-full pl-3 pr-4 py-2 placeholder:text-gray-500 focus:outline-0 border border-gray-300"
+            value={searchTerm}
+            onChange={(e) => onSearchChange(e.target.value)}
+          />
+          <RiSearch2Line className="absolute right-3 top-3 h-5 w-5 text-gray-400" />
+        </div>
+        
+        <div className="md:block hidden">
+          <div className="">
+            <h3 className="text-sm text-gray-500 mb-1">Popular Posts</h3>
+            <div className="space-y-4">
+              {posts
+                .filter((post) => post.likes.length > 0)
+                .sort((a, b) => b.likes.length - a.likes.length)
+                .slice(0, 3)
+                .map((post) => (
+                  <div key={`popular-${post._id}`} className="flex flex-col gap-3">
+                    <h4 className="font-medium text-lg line-clamp-2">
+                      {post.title.en || post.title.ar || "Untitled"}
+                    </h4>
+                    {post.image && (
+                      <img
+                        src={post.image}
+                        alt={post.title.en || post.title.ar || "Post image"}
+                        className="w-full h-40 object-cover"
+                      />
+                    )}
+                    <div className="flex items-center justify-between">
+                      <div className="text-gray-500 text-sm">
+                        {post.description.en}...
+                      </div>
+                      <div className="flex items-center gap-1 text-gray-500">
+                        <CiHeart className="h-5 w-5" />
+                        {post.likes.length}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+            </div>
+          </div>
+
+          <div className="mt-8">
+            <h3 className="text-lg font-semibold mb-4">Recent Posts</h3>
+            <div className="space-y-4">
+              {recentPosts.map((post) => {
+                const postTitle = post.title?.en || post.title?.ar || "Untitled Post";
+                return (
+                  <div key={`recent-${post._id}`} className="flex items-center justify-between">
+                    <h4 className="text-base text-heading-blog">{postTitle}</h4>
+                    <div className="text-xs text-gray-500">
+                      {new Date(post.createdAt).toLocaleDateString("en-US", {
+                        month: "short",
+                        day: "numeric",
+                        year: "numeric",
+                      })}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default BlogSidebar;

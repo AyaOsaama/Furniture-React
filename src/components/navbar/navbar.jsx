@@ -7,9 +7,11 @@ import bagDark from "../../assets/icons/bag-black.png";
 
 const navLinks = [
   { href: "/", label: "Home" },
-  { href: "/shop", label: "Shop" },
+{ href: "/products", label: "Products" },
   { href: "/about", label: "About Us" },
   { href: "/contactus", label: "Contact Us" },
+  { href: "/posts", label: "Blog" },
+  
 ];
 
 function Navbar() {
