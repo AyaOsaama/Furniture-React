@@ -5,6 +5,8 @@ import SignIn from "./components/SignUp/signIn";
 import SignUp from "./components/SignUp/signUp";
 import ForTest from "./components/forTest";
 import { AuthProvider, useAuth } from "./contextAuth/AuthContext";
+import ForgetPass from "./components/SignUp/forgetPass";
+import NotFound from "./components/NotFound/notFound";
 
 function AnimatedRoutes() {
   const location = useLocation();
@@ -23,6 +25,8 @@ function AnimatedRoutes() {
           </>
         )}
         <Route path="/signup" element={<SignUp />} />
+        <Route path="/forgetPass" element={<ForgetPass />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </AnimatePresence>
   );
