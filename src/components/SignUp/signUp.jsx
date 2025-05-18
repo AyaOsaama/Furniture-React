@@ -279,7 +279,7 @@ function SignUp() {
               <p className="font-sans font-bold text-sm text-center px-10">
                 Already have an account?{" "}
                 <button
-                  onClick={() => navigate("/signin")}
+                  onClick={() => navigate("/")}
                   className="text-blue-600 underline hover:text-blue-800"
                   type="button"
                 >
