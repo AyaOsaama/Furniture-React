@@ -4,15 +4,23 @@ import searchLight from "../../assets/icons/search.png";
 import bagLight from "../../assets/icons/bag.png";
 import searchDark from "../../assets/icons/search-black.png";
 import bagDark from "../../assets/icons/bag-black.png";
+import { useNavigate } from "react-router-dom";
+import { FaRegUser } from "react-icons/fa";
+import { useSelector } from "react-redux";
 
 const navLinks = [
   { href: "/", label: "Home" },
   { href: "/shop", label: "Shop" },
+  { href: "/blog", label: "Blog" },
   { href: "/about", label: "About Us" },
   { href: "/contactus", label: "Contact Us" },
 ];
 
 function Navbar() {
+  const cartItemsCount = useSelector((state) => state.cart.items.length);
+
+  const navigate = useNavigate();
+
   const { pathname } = useLocation();
   const [scrolled, setScrolled] = useState(false);
   const isHome = pathname === "/";
@@ -31,7 +39,15 @@ function Navbar() {
 
   const searchIcon = scrolled || !isHome ? searchDark : searchLight;
   const bagIcon = scrolled || !isHome ? bagDark : bagLight;
-
+  const handleUserIconClick = () => {
+    const token = localStorage.getItem("token"); 
+    const user = localStorage.getItem("user"); 
+    if (user) {
+      navigate("/profile");
+    } else {
+      navigate("/login");
+    }
+  };
   return (
     <nav
       className={`fixed top-0 left-0 w-full z-50 px-6 py-4 transition-all duration-300 ${navbarEffect}`}
@@ -95,9 +111,24 @@ function Navbar() {
           <img
             src={searchIcon}
             alt="Search"
-            className="w-5 h-5 cursor-pointer"
-          />
-          <img src={bagIcon} alt="Bag" className="w-5 h-5 cursor-pointer" />
+            className="w-5 h-5 cursor-pointer"/>
+    <FaRegUser
+      className="w-5 h-5 cursor-pointer text-gray-500 hover:text-gray-600"
+      onClick={handleUserIconClick}
+    />
+<div className="relative">
+  <img
+    src={bagIcon}
+    alt="Bag"
+    className="w-5 h-5 cursor-pointer"
+    onClick={() => navigate("/cart")}
+  />
+  {cartItemsCount > 0 && (
+    <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs w-4 h-4 flex items-center justify-center rounded-full">
+      {cartItemsCount}
+    </span>
+  )}
+</div>
         </div>
       </div>
     </nav>

@@ -1,10 +1,20 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import './index.css'
-import App from './App.jsx'
+// main.jsx
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import App from './App';
+import { Provider } from 'react-redux';
+import { store } from './redux/store';
+import { PayPalScriptProvider } from "@paypal/react-paypal-js";
+import { AuthProvider } from './contextAuth/AuthContext'; 
 
-createRoot(document.getElementById('root')).render(
-  <StrictMode>
-    <App />
-  </StrictMode>,
-)
+ReactDOM.createRoot(document.getElementById('root')).render(
+  <React.StrictMode>
+    <PayPalScriptProvider options={{ "client-id": "AQVBWA96vQKJBbds8eSIiSe1RUvs_VezGTW_f1JU2nYNKNm7IIMYnblA8g_ujmdKDIf-TJNohAOgDvG1" }}>
+      <Provider store={store}>
+        <AuthProvider> 
+          <App />
+        </AuthProvider>
+      </Provider>
+    </PayPalScriptProvider>
+  </React.StrictMode>
+);

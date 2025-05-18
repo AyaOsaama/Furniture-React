@@ -1,5 +1,4 @@
 import Carousel from "../components/carousel/carousel.jsx";
-import Products from "../components/products/products.jsx";
 import Diff from "../components/diff/diff.jsx";
 import Chair from "../assets/images/chair.png";
 import Table from "../assets/images/table.png";
@@ -134,7 +133,6 @@ function Home() {
   return (
     <>
       <Carousel slides={bannerSlides} variant="banner" idPrefix="banner" />
-      <Products />
       <Diff />
 
       {sections.map((section, index) => (

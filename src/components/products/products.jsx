@@ -1,39 +1,90 @@
-import CustomCard from "../custom_card/custom_card.jsx";
-import cardProductOne from "../../assets/images/cp1.png";
-import cardProductTwo from "../../assets/images/cp2.png";
-import cardProductThree from "../../assets/images/cp3.png";
-function Product() {
+import { useProducts } from "../utils/useProducts";
+import ProductGrid from "./ProductGrid";
+import FilterSidebar from "./FilterSidebar";
+import SortDropdown from "./SortDropdown";
+import PaginationControls from "./PaginationControls";
+
+const Products = () => {
+  const {
+    // variants,
+    currentVariants,
+    currentPage,
+    totalPages,
+    hasLoaded,
+    filteredVariants,
+    searchTerm,
+    setSearchTerm,
+    selectedCategories,
+    handleCategoryChange,
+    selectedColors,
+    handleColorChange,
+    tempSliderValues,
+    handleMouseDown,
+    calculatePosition,
+    applyPriceFilter,
+    resetFilters,
+    // sortOption,
+    // setSortOption,
+    setCurrentPage,
+    categories,
+    colorOptions,
+    selectedRatings,
+    handleRatingChange,
+  } = useProducts();
+
   return (
-    <div className="px-4 sm:px-6 md:px-12">
-      <h1 className="text-3xl sm:text-4xl font-bold text-[#373737] text-center py-6 font-['PTSans']">
-        Products of the week
-      </h1>
+    <div className="flex flex-col-reverse lg:flex-row mx-20 my-15 gap-8">
+      {/* Products section */}
+      <div className="lg:w-3/4 w-full">
+        {/* Product count and sort */}
+        {hasLoaded && filteredVariants.length > 0 && (
+          <div className="flex md:flex-row flex-col md:gap-0 gap-4 justify-between items-center mb-4">
+            <div className="text-gray-500 lg:text-lg text-sm ">
+              Showing {currentVariants.length} of {filteredVariants.length}{" "}
+              products
+            </div>
+            <SortDropdown
+              selectedRatings={selectedRatings}
+              handleRatingChange={handleRatingChange}
+            />
+          </div>
+        )}
 
-      <p className="text-center text-[#8A8A8A] font-['PTSans'] text-base sm:text-lg max-w-md sm:max-w-xl mx-auto mb-8 px-2">
-        Discover our handpicked selection of this week's favorite pieces — where
-        modern elegance meets everyday comfort. Elevate your space with designs
-        made to stand out.
-      </p>
+        <ProductGrid
+          hasLoaded={hasLoaded}
+          currentVariants={currentVariants}
+          filteredVariants={filteredVariants}
+          resetFilters={resetFilters}
+        />
 
-      <div className="flex flex-col sm:flex-row justify-center items-center gap-6 flex-wrap pb-12">
-        <CustomCard
-          imageCard={cardProductOne}
-          titleCard="Pot"
-          price="$ 223,00"
-        />
-        <CustomCard
-          imageCard={cardProductTwo}
-          titleCard="Lamp"
-          price="$ 223,00"
-        />
-        <CustomCard
-          imageCard={cardProductThree}
-          titleCard="Chair"
-          price="$ 223,00"
-        />
+        {/* Pagination */}
+        {hasLoaded && filteredVariants.length > 0 && totalPages > 1 && (
+          <PaginationControls
+            currentPage={currentPage}
+            totalPages={totalPages}
+            setCurrentPage={setCurrentPage}
+          />
+        )}
       </div>
+
+      {/* Filters section */}
+      <FilterSidebar
+        searchTerm={searchTerm}
+        setSearchTerm={setSearchTerm}
+        categories={categories}
+        selectedCategories={selectedCategories}
+        handleCategoryChange={handleCategoryChange}
+        colorOptions={colorOptions}
+        selectedColors={selectedColors}
+        handleColorChange={handleColorChange}
+        tempSliderValues={tempSliderValues}
+        handleMouseDown={handleMouseDown}
+        calculatePosition={calculatePosition}
+        applyPriceFilter={applyPriceFilter}
+        resetFilters={resetFilters}
+      />
     </div>
   );
-}
+};
 
-export default Product;
+export default Products;
