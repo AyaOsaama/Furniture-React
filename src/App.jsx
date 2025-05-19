@@ -21,6 +21,9 @@ import { fetchCart } from "./redux/cartActions";
 import ProductDetails from './components/products/ProductDetails/ProductDetails.jsx'
 import Blog from './components/blog/BlogPosts/Blog.jsx'
 import PostDetails from './components/blog/PostDetailsPage/PostDetails.jsx'
+import { SearchProvider } from "./searchContext/SearchContext.jsx";
+import ForgetPass from "./components/SignUp/forgetPass.jsx";
+import NotFound from "./components/NotFound/notFound.jsx";
 
 const LayoutWithNavFooter = ({ children }) => (
   <>
@@ -47,7 +50,7 @@ function App() {
   return (
     <>
           <Toaster position="top-right" reverseOrder={false} />
-
+<SearchProvider>
     <BrowserRouter>
       <Routes>
         {/* Routes without Navbar/Footer */}
@@ -174,8 +177,19 @@ function App() {
               <ProfileUser />
             </LayoutWithNavFooter>
         }/>
+
+        <Route
+          path="/forgetpassword"
+          element={
+            <LayoutWithNavFooter>
+              <ForgetPass />
+            </LayoutWithNavFooter>
+          }
+        />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
+    </SearchProvider>
     </>
   );
 }
