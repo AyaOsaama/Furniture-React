@@ -14,8 +14,17 @@ function SignIn() {
 
   const [successMessage, setSuccessMessage] = React.useState(null);
   const [errorMessage, setErrorMessage] = React.useState(null);
+  const [showPassword, setShowPassword] = React.useState(false);
   const navigate = useNavigate();
   const { login } = useAuth();
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
+  const handleSignUp = () => {
+    navigate("/signup");
+  };
 
   const formik = useFormik({
     initialValues: {
@@ -24,36 +33,28 @@ function SignIn() {
       remember: true,
     },
     validationSchema: Yup.object({
-      email: Yup.string()
-        .email(t("invalidEmail"))
-        .required(t("emailRequired")),
+      email: Yup.string().email(t("invalidEmail")).required(t("emailRequired")),
       password: Yup.string().required(t("passwordRequired")),
     }),
     onSubmit: async (values, { resetForm, setSubmitting }) => {
       try {
         const result = await Login(values);
-        console.log("Login successful:", result);
-
         if (result.token) {
           login(result);
           navigate("/");
         }
-
         setSuccessMessage(t("successLogin"));
         setErrorMessage(null);
         resetForm();
       } catch (error) {
         const msg =
-          error?.response?.data?.message ||
-          error?.message ||
-          t("errorLogin");
+          error?.response?.data?.message || error?.message || t("errorLogin");
 
         if (msg.toLowerCase().includes("confirm your email")) {
           setErrorMessage(t("pleaseVerifyEmail"));
         } else {
           setErrorMessage(msg);
         }
-
         setSuccessMessage(null);
       } finally {
         setSubmitting(false);
@@ -65,10 +66,6 @@ function SignIn() {
       }, 3000);
     },
   });
-
-  const handleSignUp = () => {
-    navigate("/signup");
-  };
 
   return (
     <motion.div
@@ -101,7 +98,9 @@ function SignIn() {
 
             <form onSubmit={formik.handleSubmit} className="w-full max-w-md">
               <div className="mb-4">
-                <p className="text-sm mb-2 font-semibold">{t("emailAddress")}</p>
+                <p className="text-sm mb-2 font-semibold">
+                  {t("emailAddress")}
+                </p>
                 <input
                   type="text"
                   name="email"
@@ -112,19 +111,72 @@ function SignIn() {
                   className="input input-bordered w-full mb-2 rounded-[12px]"
                 />
                 {formik.touched.email && formik.errors.email && (
-                  <div className="text-red-500 text-sm">{formik.errors.email}</div>
+                  <div className="text-red-500 text-sm">
+                    {formik.errors.email}
+                  </div>
                 )}
               </div>
 
+              {/* Password Field with show/hide and forget password */}
               <div className="mb-4">
-                <div className="flex justify-between items-center mb-2">
+                <div className="flex items-center justify-between mb-2 relative">
                   <p className="text-sm font-semibold">{t("password")}</p>
-                  <a className="text-sm font-semibold text-blue-600 cursor-pointer">
-                    {t("forgetPassword")}
-                  </a>
+                  <div className="flex items-center gap-2 ml-auto">
+                    <button
+                      type="button"
+                      onClick={() => navigate("/forgetpassword")}
+                      className="text-sm font-semibold text-blue-600 cursor-pointer"
+                    >
+                      {t("forgetPassword")}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={togglePasswordVisibility}
+                      className="text-sm font-semibold text-gray-600"
+                      tabIndex={-1}
+                    >
+                      {showPassword ? (
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-5 w-5"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                            d="M13.875 18.825A10.05 10.05 0 0112 19c-5.523 0-10-4.477-10-10a9.961 9.961 0 011.65-5.625M3 3l18 18"
+                          />
+                        </svg>
+                      ) : (
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-5 w-5"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                          />
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                            d="M2.458 12C3.732 7.943 7.522 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.478 0-8.268-2.943-9.542-7z"
+                          />
+                        </svg>
+                      )}
+                    </button>
+                  </div>
                 </div>
                 <input
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   name="password"
                   placeholder={t("passwordPlaceholder")}
                   value={formik.values.password}
@@ -133,7 +185,9 @@ function SignIn() {
                   className="input input-bordered w-full rounded-[12px]"
                 />
                 {formik.touched.password && formik.errors.password && (
-                  <div className="text-red-500 text-sm">{formik.errors.password}</div>
+                  <div className="text-red-500 text-sm">
+                    {formik.errors.password}
+                  </div>
                 )}
               </div>
 

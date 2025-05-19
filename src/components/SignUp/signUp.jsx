@@ -14,14 +14,14 @@ function SignUp() {
 
   const [successMessage, setSuccessMessage] = React.useState(null);
   const [errorMessage, setErrorMessage] = React.useState(null);
+  const [showPassword, setShowPassword] = React.useState(false);
+  const togglePasswordVisibility = () => setShowPassword(!showPassword);
+
   const navigate = useNavigate();
 
   const formik = useFormik({
     initialValues: {
-      userName: {
-        en: "",
-        ar: "",
-      },
+      userName: { en: "", ar: "" },
       email: "",
       password: "",
     },
@@ -51,7 +51,6 @@ function SignUp() {
           navigate("/");
         }, 1000);
       } catch (error) {
-        console.error("Registration error:", error?.response?.data?.message);
         const message = error?.response?.data?.message;
         setErrorMessage(
           typeof message === "string"
@@ -68,7 +67,7 @@ function SignUp() {
   });
 
   const handleSignIn = () => {
-    navigate("/");
+    navigate("/login");
   };
 
   return (
@@ -100,9 +99,7 @@ function SignUp() {
 
             <form onSubmit={formik.handleSubmit} className="w-full max-w-md">
               <div className="mb-4">
-                <p className="text-sm mb-2 font-semibold">
-                  {t("name_en")}
-                </p>
+                <p className="text-sm mb-2 font-semibold">{t("name_en")}</p>
                 <input
                   type="text"
                   name="userName.en"
@@ -120,9 +117,7 @@ function SignUp() {
               </div>
 
               <div className="mb-4">
-                <p className="text-sm mb-2 font-semibold">
-                  {t("name_ar")}
-                </p>
+                <p className="text-sm mb-2 font-semibold">{t("name_ar")}</p>
                 <input
                   type="text"
                   name="userName.ar"
@@ -158,11 +153,54 @@ function SignUp() {
               </div>
 
               <div className="mb-6">
-                <p className="text-sm mb-2 font-semibold">
-                  {t("password")}
-                </p>
+                <div className="flex items-center justify-between mb-2">
+                  <p className="text-sm font-semibold">{t("password")}</p>
+                  <button
+                    type="button"
+                    onClick={togglePasswordVisibility}
+                    className="text-sm font-semibold text-gray-600"
+                  >
+                    {showPassword ? (
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-5 w-5"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M13.875 18.825A10.05 10.05 0 0112 19c-5.523 0-10-4.477-10-10a9.961 9.961 0 011.65-5.625M3 3l18 18"
+                        />
+                      </svg>
+                    ) : (
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-5 w-5"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                        />
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M2.458 12C3.732 7.943 7.522 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.478 0-8.268-2.943-9.542-7z"
+                        />
+                      </svg>
+                    )}
+                  </button>
+                </div>
                 <input
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   name="password"
                   placeholder={t("password")}
                   value={formik.values.password}
@@ -177,9 +215,15 @@ function SignUp() {
                 )}
               </div>
 
+              {/* Success and Error Messages */}
               {successMessage && (
-                <div className="alert alert-success mb-4" role="alert">
+                <div
+                  className="alert alert-success mb-4 transition-opacity duration-500 ease-in-out"
+                  role="alert"
+                  aria-live="polite"
+                >
                   <svg
+                    xmlns="http://www.w3.org/2000/svg"
                     className="h-6 w-6 shrink-0 stroke-current"
                     fill="none"
                     viewBox="0 0 24 24"
@@ -188,7 +232,7 @@ function SignUp() {
                       strokeLinecap="round"
                       strokeLinejoin="round"
                       strokeWidth="2"
-                      d="M9 12l2 2 4-4"
+                      d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
                     />
                   </svg>
                   <span>{successMessage}</span>
@@ -196,8 +240,13 @@ function SignUp() {
               )}
 
               {errorMessage && (
-                <div className="alert alert-error mb-4" role="alert">
+                <div
+                  className="alert alert-error mb-4 transition-opacity duration-500 ease-in-out"
+                  role="alert"
+                  aria-live="assertive"
+                >
                   <svg
+                    xmlns="http://www.w3.org/2000/svg"
                     className="h-6 w-6 shrink-0 stroke-current"
                     fill="none"
                     viewBox="0 0 24 24"
@@ -206,13 +255,14 @@ function SignUp() {
                       strokeLinecap="round"
                       strokeLinejoin="round"
                       strokeWidth="2"
-                      d="M12 8v4m0 4h.01"
+                      d="M12 8v4m0 4h.01M21 12A9 9 0 1112 3a9 9 0 0112 9z"
                     />
                   </svg>
                   <span>{errorMessage}</span>
                 </div>
               )}
 
+              {/* Submit Button */}
               <button
                 type="submit"
                 disabled={formik.isSubmitting}
@@ -220,13 +270,12 @@ function SignUp() {
                   formik.isSubmitting ? "opacity-50 cursor-not-allowed" : ""
                 }`}
               >
-                {formik.isSubmitting
-                  ? t("signing_up")
-                  : t("signup_button")}
+                {formik.isSubmitting ? t("signing_up") : t("signup_button")}
               </button>
 
               <div className="divider">{t("or")}</div>
 
+              {/* Social Media Login Buttons */}
               <div className="flex w-full max-w-md gap-4 mb-4">
                 <button className="flex-1 btn bg-white text-black border-[#e5e5e5] h-12">
                   {t("login_google")}
@@ -236,6 +285,7 @@ function SignUp() {
                 </button>
               </div>
 
+              {/* Sign In Link */}
               <div className="w-full flex justify-center mb-10 md:mb-0 mt-10">
                 <p className="font-sans font-bold text-sm text-center px-10">
                   {t("already_account")}{" "}

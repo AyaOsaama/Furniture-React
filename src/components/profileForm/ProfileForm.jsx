@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../contextAuth/AuthContext";
 import { toast } from "react-hot-toast";
 import { useTranslation } from "react-i18next";
+import background from "../SignUp/assets/background.png";
 
 const ProfileForm = () => {
   const { t } = useTranslation("profileuser");
@@ -60,7 +61,8 @@ const ProfileForm = () => {
 
     const formData = new FormData();
 
-    if (user.userName) formData.append("userName", JSON.stringify(user.userName));
+    if (user.userName)
+      formData.append("userName", JSON.stringify(user.userName));
     if (user.address) formData.append("address", JSON.stringify(user.address));
     if (user.phone) formData.append("phone", user.phone);
     if (imageFile) formData.append("image", imageFile);
@@ -98,117 +100,141 @@ const ProfileForm = () => {
   if (!user) return <span className="loading loading-dots loading-lg"></span>;
 
   return (
-    <form className="space-y-4 max-w-3xl mx-auto p-4" onSubmit={handleSubmit}>
-      <h2 className="text-2xl font-bold">{t("profileOverviewTitle")}</h2>
+    <div className="relative min-h-screen w-full overflow-x-hidden">
+      {/* الخلفية */}
+      <div className="absolute inset-0 z-0">
+        <img
+          src={background}
+          alt="Background"
+          className="w-full h-full object-cover"
+        />
+      </div>
 
-      <div className="flex items-center space-x-4" style={{ position: "relative" }}>
-        <div className="avatar">
-          <div className="w-20 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
-            <img src={preview || "/default-avatar.png"} alt="User Avatar" />
+      {/* المحتوى */}
+      <div className="relative z-10 flex items-center justify-center px-4 py-10">
+        <form
+          className="w-full max-w-3xl bg-white bg-opacity-90 p-6 rounded-lg shadow-lg space-y-6"
+          onSubmit={handleSubmit}
+        >
+          <h2 className="text-2xl font-bold text-center">
+            {t("profileOverviewTitle")}
+          </h2>
+
+          {/* صورة المستخدم */}
+          <div className="flex flex-col md:flex-row items-center gap-4">
+            <div className="avatar">
+              <div className="w-24 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
+                <img src={preview || "/default-avatar.png"} alt="User Avatar" />
+              </div>
+            </div>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleImageChange}
+              className="file-input file-input-bordered w-full md:w-auto"
+            />
           </div>
-        </div>
-        <input type="file" accept="image/*" onChange={handleImageChange} />
-      </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <input
-          name="userName.en"
-          type="text"
-          placeholder={t("userName.en")}
-          className="input input-bordered w-full"
-          value={user.userName?.en || ""}
-          onChange={(e) =>
-            setUser((prev) => ({
-              ...prev,
-              userName: { ...prev.userName, en: e.target.value },
-            }))
-          }
-        />
-        <input
-          name="userName.ar"
-          type="text"
-          placeholder={t("userName.ar")}
-          className="input input-bordered w-full"
-          value={user.userName?.ar || ""}
-          onChange={(e) =>
-            setUser((prev) => ({
-              ...prev,
-              userName: { ...prev.userName, ar: e.target.value },
-            }))
-          }
-        />
-        <input
-          name="address.en"
-          type="text"
-          placeholder={t("address.en")}
-          className="input input-bordered w-full"
-          value={user.address?.en || ""}
-          onChange={(e) =>
-            setUser((prev) => ({
-              ...prev,
-              address: { ...prev.address, en: e.target.value },
-            }))
-          }
-        />
-        <input
-          name="address.ar"
-          type="text"
-          placeholder={t("address.ar")}
-          className="input input-bordered w-full"
-          value={user.address?.ar || ""}
-          onChange={(e) =>
-            setUser((prev) => ({
-              ...prev,
-              address: { ...prev.address, ar: e.target.value },
-            }))
-          }
-        />
-        <input
-          name="phone"
-          type="text"
-          placeholder={t("phone")}
-          className="input input-bordered w-full"
-          value={user.phone || ""}
-          onChange={handleChange}
-        />
-        <input
-          type="email"
-          value={user.email}
-          className="input input-bordered w-full bg-gray-100"
-          disabled
-          placeholder={t("email")}
-        />
-      </div>
+          {/* الفورم */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <input
+              name="userName.en"
+              type="text"
+              placeholder={t("userName.en")}
+              className="input input-bordered w-full"
+              value={user.userName?.en || ""}
+              onChange={(e) =>
+                setUser((prev) => ({
+                  ...prev,
+                  userName: { ...prev.userName, en: e.target.value },
+                }))
+              }
+            />
+            <input
+              name="userName.ar"
+              type="text"
+              placeholder={t("userName.ar")}
+              className="input input-bordered w-full"
+              value={user.userName?.ar || ""}
+              onChange={(e) =>
+                setUser((prev) => ({
+                  ...prev,
+                  userName: { ...prev.userName, ar: e.target.value },
+                }))
+              }
+            />
+            <input
+              name="address.en"
+              type="text"
+              placeholder={t("address.en")}
+              className="input input-bordered w-full"
+              value={user.address?.en || ""}
+              onChange={(e) =>
+                setUser((prev) => ({
+                  ...prev,
+                  address: { ...prev.address, en: e.target.value },
+                }))
+              }
+            />
+            <input
+              name="address.ar"
+              type="text"
+              placeholder={t("address.ar")}
+              className="input input-bordered w-full"
+              value={user.address?.ar || ""}
+              onChange={(e) =>
+                setUser((prev) => ({
+                  ...prev,
+                  address: { ...prev.address, ar: e.target.value },
+                }))
+              }
+            />
+            <input
+              name="phone"
+              type="text"
+              placeholder={t("phone")}
+              className="input input-bordered w-full"
+              value={user.phone || ""}
+              onChange={handleChange}
+            />
+            <input
+              type="email"
+              value={user.email}
+              className="input input-bordered w-full bg-gray-100"
+              disabled
+              placeholder={t("email")}
+            />
+          </div>
 
-      <div className="flex gap-4 mt-4">
-        <button
-          type="submit"
-          className="btn bg-gray-400 text-white hover:bg-gray-500"
-        >
-          {t("updateProfile")}
-        </button>
-        <button
-          type="button"
-          onClick={() => navigate("/changePassword")}
-          className="btn bg-gray-400 text-white hover:bg-gray-500"
-          style={{ marginLeft: 10 }}
-        >
-          {t("changePassword")}
-        </button>
+          {/* الأزرار */}
+          <div className="flex flex-col md:flex-row gap-3 md:gap-4 justify-center">
+            <button
+              type="submit"
+              className="btn bg-gray-500 text-white hover:bg-gray-600 w-full md:w-auto"
+            >
+              {t("updateProfile")}
+            </button>
+            <button
+              type="button"
+              onClick={() => navigate("/changePassword")}
+              className="btn bg-gray-500 text-white hover:bg-gray-600 w-full md:w-auto"
+            >
+              {t("changePassword")}
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                logout();
+                navigate("/login");
+              }}
+              className="btn bg-red-500 text-white hover:bg-red-600 w-full md:w-auto"
+            >
+              {t("logout")}
+            </button>
+          </div>
+        </form>
       </div>
-
-      <button
-        type="button"
-        onClick={() => {
-          logout();
-          navigate("/login");
-        }}
-        className="btn bg-gray-400 text-white hover:bg-gray-500"
-        style={{ bottom: "8%", right: "8%", position: "absolute" }}
-      >
-        {t("logout")}
-      </button>
-    </form>
+    </div>
   );
 };
 

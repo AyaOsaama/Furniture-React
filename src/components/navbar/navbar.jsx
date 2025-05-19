@@ -8,6 +8,8 @@ import { FaRegUser } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 import { FaGlobe } from "react-icons/fa";
+import { useContext } from "react";
+import { SearchContext } from "../../searchContext/SearchContext.jsx";
 
 function Navbar() {
   const { t, i18n } = useTranslation("navbar");
@@ -32,6 +34,10 @@ function Navbar() {
     setShowLangMenu(false); // اخفاء القائمة بعد الاختيار
   };
 
+  // الصفحات اللي مش عايزين فيها السيرش
+  const hideSearchOn = ["/shop", "/contactus", "/blog"];
+  const shouldHideSearchIcon = hideSearchOn.includes(pathname);
+
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 10);
     window.addEventListener("scroll", onScroll);
@@ -47,6 +53,7 @@ function Navbar() {
   const searchIcon = scrolled || !isHome ? searchDark : searchLight;
   const bagIcon = scrolled || !isHome ? bagDark : bagLight;
 
+  const { searchQuery, setSearchQuery } = useContext(SearchContext);
   const handleUserIconClick = () => {
     const token = localStorage.getItem("token");
     const user = localStorage.getItem("user");
@@ -54,6 +61,12 @@ function Navbar() {
       navigate("/profile");
     } else {
       navigate("/login");
+    }
+  };
+
+  const handleSearch = () => {
+    if (searchQuery.trim() !== "") {
+      navigate(`/shop?search=${searchQuery}`);
     }
   };
 
@@ -95,7 +108,6 @@ function Navbar() {
               ))}
             </ul>
           </div>
-
           <a className="text-2xl font-semibold">FurniITI</a>
         </div>
 
@@ -105,7 +117,9 @@ function Navbar() {
               <li key={link.href}>
                 <a
                   href={link.href}
-                  className={`${pathname === link.href ? "font-bold underline" : ""}`}
+                  className={`${
+                    pathname === link.href ? "font-bold underline" : ""
+                  }`}
                 >
                   {link.label}
                 </a>
@@ -115,18 +129,42 @@ function Navbar() {
         </div>
 
         <div className="navbar-end gap-3">
-          {/* 🔍 Search Icon */}
-          <img
-            src={searchIcon}
-            alt={t("search") || "Search"}
-            className="w-5 h-5 cursor-pointer"
+          {/* 🔍 Search Icon + Search Input */}
+          {!shouldHideSearchIcon && (
+            <div className="flex items-center gap-2">
+              <img
+                src={searchIcon}
+                alt={t("search") || "Search"}
+                className="w-5 h-5 cursor-pointer"
+                onClick={handleSearch}
+              />
+              <input
+                type="search"
+                className="no-scrollbar border rounded px-2 py-1 text-sm"
+                placeholder={t("search") || "Search"}
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    handleSearch();
+                  }
+                }}
+                style={{ minWidth: 100 }}
+              />
+            </div>
+          )}
+
+          {/* 👤 User Icon */}
+          <FaRegUser
+            className="w-5 h-5 cursor-pointer text-gray-500 hover:text-gray-600"
+            onClick={handleUserIconClick}
           />
 
-          {/* 🛍 Bag Icon */}
+          {/* 🛒 Bag Icon */}
           <div className="relative">
             <img
               src={bagIcon}
-              alt={t("bag") || "Bag"}
+              alt="Bag"
               className="w-5 h-5 cursor-pointer"
               onClick={() => navigate("/cart")}
             />
@@ -136,6 +174,7 @@ function Navbar() {
               </span>
             )}
           </div>
+
           {/* 🌐 Language Selector */}
           <div className="relative">
             <FaGlobe
@@ -159,12 +198,6 @@ function Navbar() {
               </div>
             )}
           </div>
-
-          {/* 👤 User Icon */}
-          <FaRegUser
-            className="w-5 h-5 cursor-pointer text-gray-500 hover:text-gray-600"
-            onClick={handleUserIconClick}
-          />
         </div>
       </div>
     </nav>
