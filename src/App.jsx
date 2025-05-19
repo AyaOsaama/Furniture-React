@@ -26,6 +26,7 @@ import { ToastContainer } from "react-toastify";
 import { SearchProvider } from "./searchContext/SearchContext.jsx";
 import ForgetPass from "./components/SignUp/forgetPass.jsx";
 import NotFound from "./components/NotFound/notFound.jsx";
+import WishlistPage from "./components/wishList/wishList.jsx"
 
 const LayoutWithNavFooter = ({ children }) => (
   <>
@@ -188,6 +189,14 @@ function App() {
               element={
                 <LayoutWithNavFooter>
                   <ForgetPass />
+                </LayoutWithNavFooter>
+              }
+            />
+            <Route
+              path="/wishlist"
+              element={
+                <LayoutWithNavFooter>
+                  <WishlistPage />
                 </LayoutWithNavFooter>
               }
             />

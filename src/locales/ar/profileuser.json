@@ -21,5 +21,7 @@
   "updateFailed": "فشل التحديث",
   "somethingWentWrong": "حدث خطأ أثناء التحديث",
   "myOrders": "طلباتي",
-  "wishlist": "قائمة الرغبات"
+  "wishlist": "قائمة الرغبات",
+  "showMenu": "عرض القائمة",
+  "hideMenu": "إخفاء القائمة"
 }

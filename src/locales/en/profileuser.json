@@ -21,7 +21,9 @@
   "updateFailed": "Update failed",
   "somethingWentWrong": "Something went wrong during update",
   "myOrders": "My Orders",
-  "wishlist": "Wishlist"
+  "wishlist": "Wishlist",
+  "showMenu": "Show Menu",
+  "hideMenu": "Hide Menu"
 }
 
 
