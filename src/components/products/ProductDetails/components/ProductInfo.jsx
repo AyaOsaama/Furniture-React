@@ -1,6 +1,13 @@
 import React from 'react';
 import RatingStars from '../../RatingStars';
 import ProductTabs from './ProductTabs';
+import { useDispatch } from "react-redux";
+import { addCartItem } from "../../../../redux/cartActions";
+import { useTranslation } from "react-i18next";
+import i18n from '../../../../i18n';
+import { useNavigate } from "react-router-dom"; // لو تستخدم react-router
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const ProductInfo = ({
   product,
@@ -12,19 +19,41 @@ const ProductInfo = ({
   toggleWishlist,
   isWishlisted
 }) => {
+  const { t } = useTranslation("productdetails");
+  const currentLang = i18n.language; 
   const variant = product.variants[selectedVariant];
   const maxQuantity = variant.inStock || 10;
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+ const handleAddToCart = () => {
+  const token = localStorage.getItem("token");
+  if (!token) {
+    toast.error(t("productInfo.mustLoginFirst"));
+    navigate("/login");
+    return;
+  }
+
+  dispatch(addCartItem({ product, quantity }))
+    .unwrap()
+    .then(() => {
+      toast.success(t("productInfo.addedToCart"));
+    })
+    .catch((error) => {
+      toast.error(error.message || "Failed to add to cart");
+    });
+};
+
 
   return (
     <div className="md:w-1/2">
       <h1 className="text-2xl md:text-3xl font-bold mb-2">
-        {variant.name?.en || "Product Name"}
+        {variant.name?.[currentLang] || t("productInfo.defaultName")} 
       </h1>
 
       <div className="flex items-center mb-4">
         <RatingStars averageRating={variant.averageRating || 0} />
         <span className="ml-2 text-sm text-gray-500">
-          ({variant.ratingCount || 0} reviews)
+          ({t("productInfo.reviews", { count: variant.ratingCount || 0 })})
         </span>
       </div>
 
@@ -39,10 +68,9 @@ const ProductInfo = ({
         )}
       </div>
 
-      {/* Variant Selection */}
       {product.variants.length > 1 && (
         <div className="mb-6">
-          <h3 className="font-semibold mb-2">Variants</h3>
+          <h3 className="font-semibold mb-2">{t("productInfo.variants")}</h3>
           <div className="flex flex-wrap gap-2">
             {product.variants.map((v, index) => (
               <button
@@ -54,14 +82,13 @@ const ProductInfo = ({
                     : "border-gray-300"
                 }`}
               >
-                {v.color?.en || `Variant ${index + 1}`}
+                {v.color?.[currentLang] || t("productInfo.variant", { number: index + 1 })} {/* تعديل من en إلى currentLang */}
               </button>
             ))}
           </div>
         </div>
       )}
 
-      {/* Add to Cart */}
       <div className="flex gap-4">
         <div className="flex items-center border border-gray-300">
           <button
@@ -81,15 +108,14 @@ const ProductInfo = ({
           </button>
         </div>
         <button
-          className="bg-black w-40 text-white py-3 px-6 cursor-pointer transition-colors"
-          onClick={addToCart}
-          disabled={variant.inStock <= 0}
-        >
-          {variant.inStock > 0 ? "Add to Cart" : "Out of Stock"}
-        </button>
+  className="bg-black w-40 text-white py-3 px-6 cursor-pointer transition-colors"
+  onClick={() => handleAddToCart()} 
+  disabled={variant.inStock <= 0}
+>
+  {variant.inStock > 0 ? t("productInfo.addToCart") : t("productInfo.outOfStock")}
+</button>
       </div>
 
-      {/* Wishlist Button */}
       <div className="mt-4">
         <button
           onClick={toggleWishlist}
@@ -115,30 +141,26 @@ const ProductInfo = ({
             />
           </svg>
           <span className={isWishlisted ? "text-red-600" : "text-gray-500"}>
-            {isWishlisted ? "Wishlisted" : "Add to Wishlist"}
+            {isWishlisted ? t("productInfo.wishlisted") : t("productInfo.addToWishlist")}
           </span>
         </button>
       </div>
 
-      {/* Product Details */}
       <div className="mb-8">
-        {/* Color */}
         <div className="mb-4 flex gap-2">
-          <h3 className="font-semibold">Color: </h3>
+          <h3 className="font-semibold">{t("productInfo.color")}:</h3>
           <p className="text-gray-500">
-            {variant.color?.en || "No color information available."}
+            {variant.color?.[currentLang] || t("productInfo.noColor")} {/* تعديل من en إلى currentLang */}
           </p>
         </div>
 
-        {/* Material */}
         <div className="mb-4 flex gap-2">
-          <h3 className="font-semibold">Material: </h3>
+          <h3 className="font-semibold">{t("productInfo.material")}:</h3>
           <p className="text-gray-500">
-            {product.material?.en || "No material information available."}
+            {product.material?.[currentLang] || t("productInfo.noMaterial")} {/* تعديل من en إلى currentLang */}
           </p>
         </div>
 
-        {/* Tags */}
         {product.categories?.sub?.tags &&
           product.categories.sub.tags.length > 0 && (
             <div className="mb-4">
@@ -156,17 +178,15 @@ const ProductInfo = ({
             </div>
           )}
 
-        {/* Availability */}
         <div className="mb-4 flex gap-2">
           <h3 className="font-semibold">Availability: </h3>
           <p className="text-gray-500">
             {variant.inStock > 0
               ? `In Stock (${variant.inStock} available)`
-              : "Out of Stock"}
+              : t("productInfo.outOfStock")}
           </p>
         </div>
-        
-        {/* Product Tabs */}
+
         <div>
           <ProductTabs product={product} />
         </div>

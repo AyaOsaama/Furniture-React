@@ -2,7 +2,7 @@ import Layout from "../components/layout/layout.jsx";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useDispatch } from "react-redux";
-import { addCartItem } from "../redux/cartActions"; // عدل المسار حسب مكان الملف
+import { addCartItem } from "../redux/cartActions";
 
 function Shop() {
   const [products, setProducts] = useState([]);

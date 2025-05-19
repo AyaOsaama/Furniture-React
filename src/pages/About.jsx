@@ -11,8 +11,11 @@ import Card from "../components/card/card.jsx";
 import cardOne from "../assets/images/card-one.png";
 import cardTwo from "../assets/images/card-two.png";
 import cardThree from "../assets/images/card-three.png";
+import { useTranslation } from "react-i18next";
 
 function About() {
+  const { t } = useTranslation("about");
+
   return (
     <Layout>
       <Hero />
@@ -21,50 +24,39 @@ function About() {
         <div>
           <div className="flex items-center mb-2">
             <AccessTimeIcon />
-            <p className="ml-2 font-bold text-[#353535]">Shop online</p>
+            <p className="ml-2 font-bold text-[#353535]">{t("shopOnlineTitle")}</p>
           </div>
-          <p className="text-[#ABABAB] max-w-[200px]">
-            Shop from the comfort of your home with a smooth, modern online
-            experience.
-          </p>
+          <p className="text-[#ABABAB] max-w-[200px]">{t("shopOnlineDesc")}</p>
         </div>
 
         <div>
           <div className="flex items-center mb-2">
             <ShoppingBagOutlinedIcon />
-            <p className="ml-2 font-bold text-[#353535]">Free shipping</p>
+            <p className="ml-2 font-bold text-[#353535]">{t("freeShippingTitle")}</p>
           </div>
-          <p className="text-[#ABABAB] max-w-[200px]">
-            Enjoy fast and free delivery straight to your doorstep, hassle-free.
-          </p>
+          <p className="text-[#ABABAB] max-w-[200px]">{t("freeShippingDesc")}</p>
         </div>
 
         <div>
           <div className="flex items-center mb-2">
             <PaymentOutlinedIcon />
-            <p className="ml-2 font-bold text-[#353535]">Return policy</p>
+            <p className="ml-2 font-bold text-[#353535]">{t("returnPolicyTitle")}</p>
           </div>
-          <p className="text-[#ABABAB] max-w-[200px]">
-            Not satisfied? Our return process is easy and guaranteed to keep you
-            happy.
-          </p>
+          <p className="text-[#ABABAB] max-w-[200px]">{t("returnPolicyDesc")}</p>
         </div>
 
         <div>
           <div className="flex items-center mb-2">
             <MonetizationOnOutlinedIcon />
-            <p className="ml-2 font-bold text-[#353535]">PAYMENT</p>
+            <p className="ml-2 font-bold text-[#353535]">{t("paymentTitle")}</p>
           </div>
-          <p className="text-[#ABABAB] max-w-[200px]">
-            Secure and flexible payment methods for a seamless checkout
-            experience.
-          </p>
+          <p className="text-[#ABABAB] max-w-[200px]">{t("paymentDesc")}</p>
         </div>
       </div>
 
       <img
         src={bannerAbout}
-        alt="Banner About"
+        alt={t("bannerAlt")}
         className="w-full h-[350px] object-cover my-8"
       />
 
@@ -73,25 +65,25 @@ function About() {
         <ProgressBar />
       </div>
 
-      <div className=" mt-12">
-        <p className="font-bold text-xl">Last Blog Post</p>
+      <div className="mt-12">
+        <p className="font-bold text-xl">{t("lastBlogPost")}</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6 px-4 mb-12">
         <Card
           imageCard={cardOne}
-          titleCard="Paint your office in natural colors only"
-          dateCard="Sep 26, 2022"
+          titleCard={t("card1Title")}
+          dateCard={t("card1Date")}
         />
         <Card
           imageCard={cardTwo}
-          titleCard="Choose furniture with a modern twist"
-          dateCard="Oct 10, 2022"
+          titleCard={t("card2Title")}
+          dateCard={t("card2Date")}
         />
         <Card
           imageCard={cardThree}
-          titleCard="Decorate your living room with soft touches"
-          dateCard="Nov 15, 2022"
+          titleCard={t("card3Title")}
+          dateCard={t("card3Date")}
         />
       </div>
     </Layout>

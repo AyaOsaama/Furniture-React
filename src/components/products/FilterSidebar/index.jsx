@@ -3,6 +3,7 @@ import { RiSearch2Line } from "react-icons/ri";
 import CategoryFilter from "./CategoryFilter";
 import ColorFilter from "./ColorFilter";
 import PriceRangeFilter from "./PriceRangeFilter";
+import { useTranslation } from "react-i18next";
 
 const FilterSidebar = ({
   searchTerm,
@@ -19,6 +20,8 @@ const FilterSidebar = ({
   applyPriceFilter,
   resetFilters,
 }) => {
+  const { t } = useTranslation("products");
+
   return (
     <div className="lg:w-1/4">
       {/* Search input */}
@@ -26,7 +29,7 @@ const FilterSidebar = ({
         <div className="relative w-full max-w-xs">
           <input
             type="text"
-            placeholder="Search..."
+            placeholder={t("search_placeholder")}
             value={searchTerm}
             onChange={(e) => {
               setSearchTerm(e.target.value);
@@ -61,7 +64,7 @@ const FilterSidebar = ({
         onClick={resetFilters}
         className="w-full bg-gray-200 hover:bg-gray-300 py-2 px-4 rounded text-sm"
       >
-        Reset All Filters
+        {t("reset_filters")}
       </button>
     </div>
   );

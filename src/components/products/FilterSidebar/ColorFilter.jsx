@@ -1,9 +1,12 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 const ColorFilter = ({ colorOptions, selectedColors, handleColorChange }) => {
+  const { t } = useTranslation("products");
+
   return (
     <div className="mb-8">
-      <h3 className="font-bold text-lg mb-4">Color</h3>
+      <h3 className="font-bold text-lg mb-4">{t("colors.title")}</h3>
       <div className="space-y-2">
         {colorOptions.slice(0, 5).map((color) => (
           <div key={color.originalName} className="flex items-center">
@@ -63,7 +66,7 @@ const ColorFilter = ({ colorOptions, selectedColors, handleColorChange }) => {
               className="flex items-center justify-center text-sm text-gray-600 mt-2 cursor-pointer hover:text-gray-900"
             >
               <span className="mr-1">
-                {colorOptions.length - 5} more colors
+                {t("colors.more", { count: colorOptions.length - 5 })}
               </span>
               <svg
                 className="w-4 h-4 transition-transform peer-checked:rotate-180"

@@ -1,9 +1,14 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
+import i18n from "../../../i18n"; 
 
 const CategoryFilter = ({ categories, selectedCategories, handleCategoryChange }) => {
+  const { t } = useTranslation("products");
+  const currentLang = i18n.language;
+
   return (
     <div className="mb-8">
-      <h3 className="font-bold text-lg mb-4">Categories</h3>
+      <h3 className="font-bold text-lg mb-4">{t("categories.title")}</h3>
       <div className="space-y-2">
         {categories && categories.length > 0 ? (
           <>
@@ -20,7 +25,7 @@ const CategoryFilter = ({ categories, selectedCategories, handleCategoryChange }
                   htmlFor={`category-${category._id}`}
                   className="ml-3 text-base text-gray-800 cursor-pointer"
                 >
-                  {category.name?.en || category.name || "Unnamed Category"}
+                  {category.name?.[currentLang]|| category.name || t("categories.unnamed")}
                 </label>
               </div>
             ))}
@@ -49,7 +54,7 @@ const CategoryFilter = ({ categories, selectedCategories, handleCategoryChange }
                         htmlFor={`category-${category._id}`}
                         className="ml-3 text-base text-gray-800 cursor-pointer"
                       >
-                        {category.name?.en || category.name || "Unnamed Category"}
+                        {category.name?.[currentLang]|| category.name || t("categories.unnamed")}
                       </label>
                     </div>
                   ))}
@@ -59,7 +64,7 @@ const CategoryFilter = ({ categories, selectedCategories, handleCategoryChange }
                   className="flex items-center justify-center text-sm text-gray-600 mt-2 cursor-pointer hover:text-gray-900"
                 >
                   <span className="mr-1">
-                    {categories.length - 5} more categories
+                    {t("categories.more", { count: categories.length - 5 })}
                   </span>
                   <svg
                     className="w-4 h-4 transition-transform peer-checked:rotate-180"
@@ -80,7 +85,7 @@ const CategoryFilter = ({ categories, selectedCategories, handleCategoryChange }
             )}
           </>
         ) : (
-          <p className="text-gray-500 text-sm">No categories available</p>
+          <p className="text-gray-500 text-sm">{t("categories.none")}</p>
         )}
       </div>
     </div>

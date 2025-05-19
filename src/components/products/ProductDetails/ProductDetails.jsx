@@ -7,8 +7,11 @@ import ProductTabs from "./components/ProductTabs";
 import RelatedProducts from "./components/RelatedProducts";
 import useProductData from "./components/hooks/useProductData";
 import useCart from "./components/hooks/useCart";
+import { useTranslation } from "react-i18next";
 
 const ProductDetails = () => {
+  const { t, i18n } = useTranslation("productdetails");
+  const currentLang = i18n.language;
   const { id } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
@@ -33,9 +36,15 @@ const ProductDetails = () => {
   } = useCart(product, selectedVariant);
 
   if (loading)
-    return <div className="text-center py-12">Loading product...</div>;
+    return <div className="text-center py-12">{t("loading")}</div>;
+
   if (error)
-    return <div className="text-center py-12 text-red-500">Error: {error}</div>;
+    return (
+      <div className="text-center py-12 text-red-500">
+        {t("error", { message: error })}
+      </div>
+    );
+
   if (!product) return null;
 
   return (
@@ -45,7 +54,7 @@ const ProductDetails = () => {
         className="flex items-center text-gray-600 hover:text-black mb-6 transition-all duration-300 group cursor-pointer"
       >
         <FiArrowLeft className="mr-2 transition-all duration-300 group-hover:-translate-x-1" />
-        <span>Back to Products</span>
+        <span>{t("backToProducts")}</span>
       </button>
 
       <div className="flex flex-col">
@@ -68,7 +77,11 @@ const ProductDetails = () => {
             isWishlisted={isWishlisted}
           />
         </div>
+
+        {/* Tabs Section */}
+        <ProductTabs product={product} />
       </div>
+
       <RelatedProducts
         products={relatedProducts}
         currentProductId={product._id}

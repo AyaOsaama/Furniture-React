@@ -3,8 +3,13 @@ import ProductGrid from "./ProductGrid";
 import FilterSidebar from "./FilterSidebar";
 import SortDropdown from "./SortDropdown";
 import PaginationControls from "./PaginationControls";
+import { useTranslation } from "react-i18next";
+import i18n from "../../i18n";
 
 const Products = () => {
+  const { t } = useTranslation("products");
+  const currentLang = i18n.language;
+
   const {
     // variants,
     currentVariants,
@@ -40,8 +45,10 @@ const Products = () => {
         {hasLoaded && filteredVariants.length > 0 && (
           <div className="flex md:flex-row flex-col md:gap-0 gap-4 justify-between items-center mb-4">
             <div className="text-gray-500 lg:text-lg text-sm ">
-              Showing {currentVariants.length} of {filteredVariants.length}{" "}
-              products
+              {t("showingProducts", {
+                current: currentVariants.length,
+                total: filteredVariants.length,
+              })}
             </div>
             <SortDropdown
               selectedRatings={selectedRatings}

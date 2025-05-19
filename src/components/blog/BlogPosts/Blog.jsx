@@ -4,9 +4,11 @@ import BlogSidebar from "./components/BlogSidebar";
 import BlogPost from "./components/BlogPost";
 import LoadingSkeleton from "./components/LoadingSkeleton";
 import Pagination from "./components/Pagination";
-
+import { useTranslation } from "react-i18next";
 
 const Blog = () => {
+  const { t } = useTranslation("blog");
+
   const [posts, setPosts] = useState([]);
   const [filteredPosts, setFilteredPosts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -42,8 +44,7 @@ const Blog = () => {
         const tags = post.tags ? post.tags.join(" ") : "";
         const author = post.author || "";
 
-        const searchText =
-          `${title} ${content} ${tags} ${author}`.toLowerCase();
+        const searchText = `${title} ${content} ${tags} ${author}`.toLowerCase();
         return searchText.includes(searchTerm.toLowerCase());
       });
       setFilteredPosts(filtered);
@@ -67,12 +68,11 @@ const Blog = () => {
 
   return (
     <div className="flex flex-col lg:flex-row gap-8 max-w-6xl mx-auto px-4 py-8">
-      
-
       <BlogSidebar
         posts={posts}
         searchTerm={searchTerm}
         onSearchChange={setSearchTerm}
+        searchPlaceholder={t("blogSidebar.searchPlaceholder")}
       />
 
       <div className="lg:w-3/4 lg:order-1 order-2">

@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 const PriceRangeFilter = ({
   tempSliderValues,
@@ -6,9 +7,11 @@ const PriceRangeFilter = ({
   calculatePosition,
   applyPriceFilter,
 }) => {
+  const { t } = useTranslation("products");
+
   return (
     <div className="mb-6">
-      <h3 className="font-bold text-lg mb-4">Price</h3>
+      <h3 className="font-bold text-lg mb-4">{t("price.title")}</h3>
       <div className="flex justify-between mb-2">
         <span className="text-gray-600">${tempSliderValues.min}</span>
         <span className="text-gray-600">${tempSliderValues.max}</span>
@@ -20,18 +23,17 @@ const PriceRangeFilter = ({
             style={{
               left: `${calculatePosition(tempSliderValues.min)}%`,
               width: `${
-                calculatePosition(tempSliderValues.max) -
-                calculatePosition(tempSliderValues.min)
+                calculatePosition(tempSliderValues.max) - calculatePosition(tempSliderValues.min)
               }%`,
             }}
           ></div>
           <div
-            className="absolute h-4 flex items-center justify-center w-4 rounded-full bg-white shadow border border-gray-300 -ml-2 top-0 cursor-pointer"
+            className="absolute h-4 w-4 rounded-full bg-white shadow border border-gray-300 -ml-2 top-0 cursor-pointer"
             style={{ left: `${calculatePosition(tempSliderValues.min)}%` }}
             onMouseDown={() => handleMouseDown("min")}
           ></div>
           <div
-            className="absolute h-4 flex items-center justify-center w-4 rounded-full bg-white shadow border border-gray-300 -ml-2 top-0 cursor-pointer"
+            className="absolute h-4 w-4 rounded-full bg-white shadow border border-gray-300 -ml-2 top-0 cursor-pointer"
             style={{ left: `${calculatePosition(tempSliderValues.max)}%` }}
             onMouseDown={() => handleMouseDown("max")}
           ></div>
@@ -39,13 +41,16 @@ const PriceRangeFilter = ({
       </div>
       <div className="flex gap-4 justify-between items-center mt-4">
         <p className="text-sm text-gray-500">
-          Price ${tempSliderValues.min} - ${tempSliderValues.max}
+          {t("price.range", {
+            min: tempSliderValues.min,
+            max: tempSliderValues.max,
+          })}
         </p>
         <button
           onClick={applyPriceFilter}
           className="bg-black text-white py-2 px-5 rounded hover:bg-gray-800 transition-colors cursor-pointer"
         >
-          Filter
+          {t("price.button")}
         </button>
       </div>
     </div>

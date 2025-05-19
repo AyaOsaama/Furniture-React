@@ -1,13 +1,18 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import StarRating from "./RatingStars";
 import RatingStars from "./RatingStars";
+import { useTranslation } from "react-i18next";
+import i18n from "../../i18n";
+
 const ProductGrid = ({
   hasLoaded,
   currentVariants,
   filteredVariants,
   resetFilters,
 }) => {
+  const { t, i18n } = useTranslation("products");
+  const currentLang = i18n.language;
+
   if (!hasLoaded) {
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -33,13 +38,12 @@ const ProductGrid = ({
             >
               <img
                 src={variant.image || "/placeholder.jpg"}
-                alt={variant.name?.en || "No name"}
                 className="h-66.5 hover:outline-3 hover:outline-orange-500 transition-all cursor-pointer w-full object-cover mb-2"
               />
             </Link>
             <div className="flex flex-col justify-center items-center">
               <h2 className="font-bold font-sans text-lg">
-                {variant.name?.en || "No name"}
+                {variant.name?.[currentLang] || "No name"}
               </h2>
               <div className="flex items-center gap-1">
                 <RatingStars averageRating={variant.averageRating} />
@@ -84,17 +88,18 @@ const ProductGrid = ({
         />
       </svg>
       <h3 className="text-lg font-medium text-gray-900 mb-2">
-        No products found
+        {t("no_products_title")}
       </h3>
       <p className="text-gray-500 text-center max-w-md">
-        We couldn't find any products matching your needs. Try adjusting your
-        search criteria.
+          {t("no_products_message")}
+
       </p>
       <button
         onClick={resetFilters}
         className="mt-4 px-4 py-2 bg-black text-white rounded-md hover:bg-gray-800 transition-colors"
       >
-        Reset All Filters
+  {t("reset_filters")}
+
       </button>
     </div>
   );

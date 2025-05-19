@@ -1,8 +1,14 @@
 import React from "react";
 import { CiHeart } from "react-icons/ci";
 import { RiSearch2Line } from "react-icons/ri";
+import { useTranslation } from "react-i18next";
+import i18n from "../../../../i18n";
+
 
 const BlogSidebar = ({ posts, searchTerm, onSearchChange }) => {
+  const { t } = useTranslation("blog");
+  const currentLanguage = i18n.language;
+
   // Get 3 most recent posts
   const recentPosts = [...posts]
     .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
@@ -14,17 +20,17 @@ const BlogSidebar = ({ posts, searchTerm, onSearchChange }) => {
         <div className="relative">
           <input
             type="text"
-            placeholder="Search..."
+            placeholder={t("blogSidebar.searchPlaceholder")}
             className="w-full pl-3 pr-4 py-2 placeholder:text-gray-500 focus:outline-0 border border-gray-300"
             value={searchTerm}
             onChange={(e) => onSearchChange(e.target.value)}
           />
           <RiSearch2Line className="absolute right-3 top-3 h-5 w-5 text-gray-400" />
         </div>
-        
+
         <div className="md:block hidden">
-          <div className="">
-            <h3 className="text-sm text-gray-500 mb-1">Popular Posts</h3>
+          <div>
+            <h3 className="text-sm text-gray-500 mb-1">{t("blogSidebar.popularPosts")}</h3>
             <div className="space-y-4">
               {posts
                 .filter((post) => post.likes.length > 0)
@@ -33,18 +39,17 @@ const BlogSidebar = ({ posts, searchTerm, onSearchChange }) => {
                 .map((post) => (
                   <div key={`popular-${post._id}`} className="flex flex-col gap-3">
                     <h4 className="font-medium text-lg line-clamp-2">
-                      {post.title.en || post.title.ar || "Untitled"}
+                      {post.title[currentLanguage] || post.title.ar || t("blogSidebar.defaultTitle")}
                     </h4>
                     {post.image && (
                       <img
                         src={post.image}
-                        alt={post.title.en || post.title.ar || "Post image"}
                         className="w-full h-40 object-cover"
                       />
                     )}
                     <div className="flex items-center justify-between">
                       <div className="text-gray-500 text-sm">
-                        {post.description.en}...
+                        {post.description[currentLanguage]}...
                       </div>
                       <div className="flex items-center gap-1 text-gray-500">
                         <CiHeart className="h-5 w-5" />
@@ -57,10 +62,10 @@ const BlogSidebar = ({ posts, searchTerm, onSearchChange }) => {
           </div>
 
           <div className="mt-8">
-            <h3 className="text-lg font-semibold mb-4">Recent Posts</h3>
+            <h3 className="text-lg font-semibold mb-4">{t("blogSidebar.recentPosts")}</h3>
             <div className="space-y-4">
               {recentPosts.map((post) => {
-                const postTitle = post.title?.en || post.title?.ar || "Untitled Post";
+                const postTitle = post.title?.[currentLanguage]|| post.title?.ar || t("blogSidebar.defaultRecentTitle");
                 return (
                   <div key={`recent-${post._id}`} className="flex items-center justify-between">
                     <h4 className="text-base text-heading-blog">{postTitle}</h4>

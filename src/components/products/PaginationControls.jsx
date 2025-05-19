@@ -1,6 +1,9 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 const PaginationControls = ({ currentPage, totalPages, setCurrentPage }) => {
+  const { t } = useTranslation("products");
+
   return (
     <nav className="flex items-center justify-center gap-x-1 mt-6">
       <button
@@ -18,7 +21,7 @@ const PaginationControls = ({ currentPage, totalPages, setCurrentPage }) => {
         >
           <path d="M15 18L9 12L15 6"></path>
         </svg>
-        <span className="sr-only">Previous</span>
+        <span className="sr-only">{t("pagination.previous")}</span>
       </button>
 
       <div className="flex items-center gap-x-1">
@@ -42,13 +45,11 @@ const PaginationControls = ({ currentPage, totalPages, setCurrentPage }) => {
       </div>
 
       <button
-        onClick={() =>
-          setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-        }
+        onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
         disabled={currentPage === totalPages}
         className="min-h-9.5 min-w-9.5 py-2 px-2.5 inline-flex justify-center items-center gap-x-2 text-sm rounded-lg border border-transparent text-gray-800 hover:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none"
       >
-        <span className="sr-only">Next</span>
+        <span className="sr-only">{t("pagination.next")}</span>
         <svg
           className="shrink-0 size-3.5"
           xmlns="http://www.w3.org/2000/svg"

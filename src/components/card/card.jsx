@@ -1,4 +1,8 @@
+import { useTranslation } from "react-i18next";
+
 function Card({ imageCard, titleCard, dateCard }) {
+  const { t } = useTranslation("about");
+  
   return (
     <div className="card bg-base-100 w-full sm:w-[300px] shadow-sm mx-auto">
       <figure>
@@ -9,7 +13,7 @@ function Card({ imageCard, titleCard, dateCard }) {
         <p className="text-[#303030] text-base font-[PTSans]">{titleCard}</p>
         <div className="card-actions justify-center">
           <a className="link link-neutral text-[19px] font-[PTSans]">
-            Read More
+            {t("card.readMore")}
           </a>
         </div>
       </div>

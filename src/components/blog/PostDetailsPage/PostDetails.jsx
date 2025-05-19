@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { fetchPostById, fetchAllPosts } from "../../../api";
 import PostSidebar from "./components/PostSidebar";
 import PostContent from "./components/PostContent";
 import LoadingIndicator from "./components/LeadingIndicator";
-import { Link } from "react-router-dom";
 import { FiArrowLeft } from "react-icons/fi";
+import { useTranslation } from "react-i18next";
+
 const PostDetails = () => {
+  const { t } = useTranslation("postdetails");
   const { id } = useParams();
   const [post, setPost] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -21,12 +23,12 @@ const PostDetails = () => {
         const postsData = await fetchAllPosts();
         setPosts(postsData.posts);
       } catch (err) {
-        console.error("Error fetching posts:", err.message);
+        console.error(t("error"), err.message);
       }
     };
 
     getPosts();
-  }, []);
+  }, [t]);
 
   // Fetch single post
   useEffect(() => {
@@ -45,15 +47,21 @@ const PostDetails = () => {
   }, [id]);
 
   if (loading) return <LoadingIndicator />;
-  if (error) return <div className="text-red-500 py-8">Error: {error}</div>;
-  if (!post) return <div className="py-8">Post not found</div>;
+  if (error)
+    return (
+      <div className="text-red-500 py-8">
+        {t("error")}: {error}
+      </div>
+    );
+  if (!post)
+    return <div className="py-8">{t("postNotFound")}</div>;
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-8">
       <Link to={`/posts`}>
         <button className="flex items-center text-gray-600 hover:text-black mb-6 transition-all duration-300 group cursor-pointer">
           <FiArrowLeft className="mr-2 transition-all duration-300 group-hover:-translate-x-1" />
-          <span>Back to Posts</span>
+          <span>{t("backToPosts")}</span>
         </button>
       </Link>
       <div className="flex flex-col lg:flex-row gap-8 ">

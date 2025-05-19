@@ -1,9 +1,10 @@
 import { useEffect, useState, useCallback } from "react";
 import { fetchAllCategories, fetchAllProducts } from "../../api";
-
+import i18n from "../../i18n";
 const PRODUCTS_PER_PAGE = 6;
 
 export const useProducts = () => {
+  const currentLang = i18n.language;
   const [variants, setVariants] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
@@ -36,8 +37,8 @@ export const useProducts = () => {
         // Process color options
         const colorCounts = {};
         allVariants.forEach((variant) => {
-          if (variant.color?.en) {
-            const colorName = variant.color.en.toLowerCase();
+          if (variant.color?.[currentLang]) {
+            const colorName = variant.color?.[currentLang].toLowerCase();
             colorCounts[colorName] = (colorCounts[colorName] || 0) + 1;
           }
         });
@@ -113,14 +114,14 @@ export const useProducts = () => {
   // Filter products
   const filteredVariants = sortVariants(
     variants.filter((variant) => {
-      const matchesSearch = (variant.name?.en || "")
+      const matchesSearch = (variant.name?.[currentLang]|| "")
         .toLowerCase()
         .includes(searchTerm.toLowerCase());
 
       const matchesColor =
         selectedColors.length === 0 ||
-        (variant.color?.en &&
-          selectedColors.includes(variant.color.en.toLowerCase()));
+        (variant.color?.[currentLang]&&
+          selectedColors.includes(variant.color?.[currentLang].toLowerCase()));
 
       const matchesPrice =
         variant.price >= sliderValues.min && variant.price <= sliderValues.max;

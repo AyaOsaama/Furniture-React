@@ -1,5 +1,4 @@
 import Carousel from "../components/carousel/carousel.jsx";
-import Diff from "../components/diff/diff.jsx";
 import Chair from "../assets/images/chair.png";
 import Table from "../assets/images/table.png";
 import Contemporarylamps from "../assets/images/contemporary_lamps.png";
@@ -13,26 +12,26 @@ import coverOne from "../assets/images/c1.png";
 import coverTwo from "../assets/images/c2.jpg";
 import coverThree from "../assets/images/c3.jpg";
 import coverFour from "../assets/images/c4.jpg";
+import { useTranslation } from "react-i18next";
 
 function Home() {
+  const { t } = useTranslation("home");
+
   const sections = [
     {
-      title: "STYLISH CHAIRS",
+      title: t("stylishChairs"),
       image: Chair,
-      description:
-        "Elevate your living space with our expertly crafted chairs — where comfort meets timeless elegance.",
+      description: t("stylishChairsDesc"),
     },
     {
-      title: "TABLE",
+      title: t("table"),
       image: Table,
-      description:
-        "Discover the art of dining with tables designed to bring people together in style and warmth.",
+      description: t("tableDesc"),
     },
     {
-      title: "CONTEMPORARY LAMPS",
+      title: t("contemporaryLamps"),
       image: Contemporarylamps,
-      description:
-        "Brighten up your interiors with modern lighting that adds charm, depth, and ambiance to any room.",
+      description: t("contemporaryLampsDesc"),
     },
   ];
 
@@ -41,99 +40,60 @@ function Home() {
       id: 1,
       type: "banner",
       image: coverOne,
-      title: "Make your home feel special",
-      description: "Transform your home with timeless style.",
-      button: "View More",
+      title: t("banner1Title"),
+      description: t("banner1Desc"),
+      button: t("viewMore"),
     },
     {
       id: 2,
       type: "banner",
       image: coverTwo,
-      title: "Designed for real life",
-      description: "Crafted designs to match your everyday life.",
-      button: "View More",
+      title: t("banner2Title"),
+      description: t("banner2Desc"),
+      button: t("viewMore"),
     },
     {
       id: 3,
       image: coverThree,
-      title: "Beauty in every detail",
-      description: "Where elegance meets comfort and function.",
-      button: "View More",
+      title: t("banner3Title"),
+      description: t("banner3Desc"),
+      button: t("viewMore"),
     },
     {
       id: 4,
       image: coverFour,
-      title: "Comfort, reimagined",
-      description: "Inspired living starts with better furniture.",
-      button: "View More",
-    },
-  ];
-
-  const quoutesSlides = [
-    {
-      id: 1,
-      type: "quoutes",
-      quote:
-        "Have nothing in your house that you do not know to be useful, or believe to be beautiful.",
-      author: "William Morris",
-      role: "Artist & Designer",
-    },
-    {
-      id: 2,
-      type: "quoutes",
-      quote:
-        "Furniture should always be comfortable. And always have a piece of art that you made somewhere in the home.",
-      author: "Tamara Taylor",
-      role: "Actress",
-    },
-    {
-      id: 3,
-      type: "quoutes",
-      quote: "The details are not the details. They make the design.",
-      author: "Charles Eames",
-      role: "Designer & Architect",
-    },
-    {
-      id: 4,
-      type: "quoutes",
-      quote:
-        "Your home should rise up to meet you. And it should reflect who you are.",
-      author: "Oprah Winfrey",
-      role: "Media Executive",
+      title: t("banner4Title"),
+      description: t("banner4Desc"),
+      button: t("viewMore"),
     },
   ];
 
   const serviceItems = [
     {
       icon: <AccessTimeIcon />,
-      title: "Shop online",
-      description:
-        "Shop from the comfort of your home with a smooth, modern online experience.",
+      title: t("shopOnline"),
+      description: t("shopOnlineDesc"),
     },
     {
       icon: <ShoppingBagOutlinedIcon />,
-      title: "Free shipping",
-      description:
-        "Enjoy fast and free delivery straight to your doorstep, hassle-free.",
+      title: t("freeShipping"),
+      description: t("freeShippingDesc"),
     },
     {
       icon: <PaymentOutlinedIcon />,
-      title: "Return policy",
-      description:
-        "Not satisfied? Our return process is easy and guaranteed to keep you happy.",
+      title: t("returnPolicy"),
+      description: t("returnPolicyDesc"),
     },
     {
       icon: <MonetizationOnOutlinedIcon />,
-      title: "Payment",
-      description:
-        "Secure and flexible payment methods for a seamless checkout experience.",
+      title: t("payment"),
+      description: t("paymentDesc"),
     },
   ];
 
   return (
     <>
       <Carousel slides={bannerSlides} variant="banner" idPrefix="banner" />
-      <Diff />
 
       {sections.map((section, index) => (
         <div
@@ -157,7 +117,7 @@ function Home() {
               {section.description}
             </p>
             <button className="btn btn-outline btn-sm sm:btn-md">
-              View More ❯
+              {t("viewMore")} ❯
             </button>
           </div>
         </div>
@@ -165,10 +125,10 @@ function Home() {
 
       <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-10 my-16 bg-gray-100 text-center py-8 px-4">
         <p className="text-[#373737] text-xl sm:text-2xl lg:text-3xl font-['PTSans'] font-medium">
-          Order now for an express delivery in 24h!
+          {t("expressDelivery")}
         </p>
         <button className="btn btn-outline btn-sm sm:btn-md">
-          View More ❯
+          {t("viewMore")} ❯
         </button>
       </div>
 
@@ -192,14 +152,14 @@ function Home() {
             </figure>
             <div className="card-body text-center">
               <h2 className="text-sm text-[#777777] font-[PTSans]">
-                29 Sep, 2022 / by Soroush Norozy
+                {t("blog1Date")}
               </h2>
               <p className="text-[#2D2D2D] text-lg sm:text-xl font-[PTSans] font-bold mt-2 mb-4">
-                Your office should have only natural materials
+                {t("blog1Title")}
               </p>
               <div className="card-actions justify-center">
                 <a className="link link-neutral text-[19px] font-[PTSans]">
-                  Read More
+                  {t("readMore")}
                 </a>
               </div>
             </div>
@@ -208,7 +168,7 @@ function Home() {
       </div>
 
       <div className="mt-20">
-        <Carousel slides={quoutesSlides} variant="quoutes" idPrefix="quoutes" />
+        <Carousel slides={[]} variant="quoutes" idPrefix="quoutes" />
       </div>
     </>
   );

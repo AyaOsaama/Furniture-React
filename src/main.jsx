@@ -6,6 +6,7 @@ import { Provider } from 'react-redux';
 import { store } from './redux/store';
 import { PayPalScriptProvider } from "@paypal/react-paypal-js";
 import { AuthProvider } from './contextAuth/AuthContext'; 
+import "./i18n";
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>

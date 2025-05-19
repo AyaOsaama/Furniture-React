@@ -2,8 +2,11 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contextAuth/AuthContext";
 import { toast } from "react-hot-toast";
+import { useTranslation } from "react-i18next";
 
 const ChangePassword = () => {
+  const { t } = useTranslation("changepassword");
+
   const [form, setForm] = useState({
     oldPassword: "",
     newPassword: "",
@@ -22,7 +25,7 @@ const ChangePassword = () => {
     e.preventDefault();
 
     if (form.newPassword !== form.confirmPassword) {
-      toast.error("New password and confirmation do not match");
+      toast.error(t("errorPasswordMismatch"));
       return;
     }
 
@@ -39,7 +42,7 @@ const ChangePassword = () => {
       const data = await res.json();
 
       if (!res.ok) {
-        toast.error(data.message || "Failed to update password");
+        toast.error(data.message || t("errorUpdateFailed"));
         if (res.status === 401 || res.status === 403) {
           logout();
           navigate("/login");
@@ -48,20 +51,20 @@ const ChangePassword = () => {
       }
 
       toast.success(data.message);
-      navigate("/profile");  
+      navigate("/profile");
     } catch (error) {
-      toast.error("Something went wrong");
+      toast.error(t("errorSomethingWentWrong"));
     }
   };
 
   return (
     <form onSubmit={handleSubmit} className="max-w-md mx-auto p-8 mt-8 space-y-4">
-      <h2 className="text-xl font-bold">Change Password</h2>
+      <h2 className="text-xl font-bold">{t("title")}</h2>
 
       <input
         type="password"
         name="oldPassword"
-        placeholder="Old Password"
+        placeholder={t("oldPasswordPlaceholder")}
         className="input input-bordered w-full"
         value={form.oldPassword}
         onChange={handleChange}
@@ -71,7 +74,7 @@ const ChangePassword = () => {
       <input
         type="password"
         name="newPassword"
-        placeholder="New Password"
+        placeholder={t("newPasswordPlaceholder")}
         className="input input-bordered w-full"
         value={form.newPassword}
         onChange={handleChange}
@@ -81,7 +84,7 @@ const ChangePassword = () => {
       <input
         type="password"
         name="confirmPassword"
-        placeholder="Confirm New Password"
+        placeholder={t("confirmPasswordPlaceholder")}
         className="input input-bordered w-full"
         value={form.confirmPassword}
         onChange={handleChange}
@@ -89,7 +92,7 @@ const ChangePassword = () => {
       />
 
       <button type="submit" className="btn btn-primary w-full">
-        Update Password
+        {t("updateButton")}
       </button>
     </form>
   );

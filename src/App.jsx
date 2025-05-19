@@ -5,7 +5,6 @@ import { useDispatch } from "react-redux";
 import Navbar from "./components/navbar/navbar.jsx";
 import Footer from "./components/footer/footer.jsx";
 import Home from "./pages/Home.jsx";
-import Shop from "./pages/Shop";
 import About from "./pages/About";
 import ContactUs from "./pages/ContactUs.jsx";
 import Cart from "./pages/Cart.jsx";
@@ -21,6 +20,10 @@ import { fetchCart } from "./redux/cartActions";
 import ProductDetails from './components/products/ProductDetails/ProductDetails.jsx'
 import Blog from './components/blog/BlogPosts/Blog.jsx'
 import PostDetails from './components/blog/PostDetailsPage/PostDetails.jsx'
+import "./i18n";
+import { useTranslation } from "react-i18next";
+import { ToastContainer } from "react-toastify";
+
 
 const LayoutWithNavFooter = ({ children }) => (
   <>
@@ -34,6 +37,11 @@ const LayoutWithoutNavFooter = ({ children }) => <>{children}</>;
 
 function App() {
   const dispatch = useDispatch();
+   const { i18n } = useTranslation();
+
+  useEffect(() => {
+    document.documentElement.dir = i18n.language === "ar" ? "rtl" : "ltr";
+  }, [i18n.language]);
   useEffect(() => {
   const userData = JSON.parse(localStorage.getItem("user")); 
   const userId = userData?.id;
@@ -176,6 +184,8 @@ function App() {
         }/>
       </Routes>
     </BrowserRouter>
+          <ToastContainer position="top-right" autoClose={3000} />
+
     </>
   );
 }

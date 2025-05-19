@@ -17,25 +17,26 @@ catch (err) {
   }
 });
 
-export const addCartItem = createAsyncThunk("cart/addCartItem", async (product, thunkAPI) => {
+export const addCartItem = createAsyncThunk("cart/addCartItem", async ({ product, quantity }, thunkAPI) => {
   try {
     const token = localStorage.getItem("token");
 
     await axios.post("http://localhost:3000/carts", {
       productId: product._id,
-      quantity: 1,
+      quantity: quantity, 
       priceAtAddition: product.finalPrice,
-    },
-     {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }}
-  );
+    }, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+
     thunkAPI.dispatch(fetchCart()); 
   } catch (err) {
     return thunkAPI.rejectWithValue(err.response.data);
   }
 });
+
 
 export const removeCartItem = createAsyncThunk("cart/removeCartItem", async (itemId, thunkAPI) => {
   try {

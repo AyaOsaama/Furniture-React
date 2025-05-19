@@ -7,8 +7,11 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import "./assets/auth.css";
 import { Registration } from "../../servicesAuth/authService";
+import { useTranslation } from "react-i18next";
 
 function SignUp() {
+  const { t } = useTranslation("signup");
+
   const [successMessage, setSuccessMessage] = React.useState(null);
   const [errorMessage, setErrorMessage] = React.useState(null);
   const navigate = useNavigate();
@@ -24,45 +27,43 @@ function SignUp() {
     },
     validationSchema: Yup.object({
       userName: Yup.object().shape({
-        en: Yup.string().required("Name is required"),
-        ar: Yup.string().required("الاسم بالعربية مطلوب"),
+        en: Yup.string().required(t("validation.name_required")),
+        ar: Yup.string().required(t("validation.name_ar_required")),
       }),
       email: Yup.string()
-        .email("Invalid email format")
-        .required("Email is required"),
+        .email(t("validation.email_invalid"))
+        .required(t("validation.email_required")),
       password: Yup.string()
-        .min(8, "Password must be at least 8 characters")
-        .matches(/[A-Z]/, "Password must contain at least one uppercase letter")
-        .matches(/[a-z]/, "Password must contain at least one lowercase letter")
-        .matches(/[0-9]/, "Password must contain at least one number")
-        .matches(
-          /[@$!%*?&]/,
-          "Password must contain at least one special character"
-        )
-        .required("Password is required"),
+        .min(8, t("validation.password_min"))
+        .matches(/[A-Z]/, t("validation.password_upper"))
+        .matches(/[a-z]/, t("validation.password_lower"))
+        .matches(/[0-9]/, t("validation.password_number"))
+        .matches(/[@$!%*?&]/, t("validation.password_special"))
+        .required(t("validation.password_required")),
     }),
     onSubmit: async (values, { resetForm, setSubmitting }) => {
       try {
-        const result = await Registration(values);
-        setSuccessMessage("Registration successful!");
+        await Registration(values);
+        setSuccessMessage(t("success_registration"));
         setErrorMessage(null);
         resetForm();
         setTimeout(() => {
           navigate("/");
         }, 1000);
       } catch (error) {
-  console.error("Registration error:", error?.response?.data?.message);
-  const message = error?.response?.data?.message;
-  setErrorMessage(
-    typeof message === "string"
-      ? message
-      : typeof message === "object"
-        ? JSON.stringify(message)
-        : "Registration failed."
-  );
-  setSuccessMessage(null);
-}
-
+        console.error("Registration error:", error?.response?.data?.message);
+        const message = error?.response?.data?.message;
+        setErrorMessage(
+          typeof message === "string"
+            ? message
+            : typeof message === "object"
+            ? JSON.stringify(message)
+            : t("error_registration")
+        );
+        setSuccessMessage(null);
+      } finally {
+        setSubmitting(false);
+      }
     },
   });
 
@@ -94,16 +95,18 @@ function SignUp() {
           {/* Form Area */}
           <div className="relative z-10 flex flex-col justify-center items-center md:items-start text-center md:text-left px-6 sm:px-10 md:px-20 w-full max-w-full h-full overflow-y-auto">
             <h1 className="text-4xl font-bold mb-6 mt-10 md:mt-0">
-              Get Started Now
+              {t("title")}
             </h1>
 
             <form onSubmit={formik.handleSubmit} className="w-full max-w-md">
               <div className="mb-4">
-                <p className="text-sm mb-2 font-semibold">Name (English)</p>
+                <p className="text-sm mb-2 font-semibold">
+                  {t("name_en")}
+                </p>
                 <input
                   type="text"
                   name="userName.en"
-                  placeholder="Enter your name"
+                  placeholder={t("name_en")}
                   value={formik.values.userName.en}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
@@ -118,12 +121,12 @@ function SignUp() {
 
               <div className="mb-4">
                 <p className="text-sm mb-2 font-semibold">
-                  الاسم باللغة العربية
+                  {t("name_ar")}
                 </p>
                 <input
                   type="text"
                   name="userName.ar"
-                  placeholder="أدخل اسمك بالعربية"
+                  placeholder={t("name_ar")}
                   value={formik.values.userName.ar}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
@@ -137,11 +140,11 @@ function SignUp() {
               </div>
 
               <div className="mb-4">
-                <p className="text-sm mb-2 font-semibold">Email Address</p>
+                <p className="text-sm mb-2 font-semibold">{t("email")}</p>
                 <input
                   type="text"
                   name="email"
-                  placeholder="Enter your email address"
+                  placeholder={t("email")}
                   value={formik.values.email}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
@@ -155,11 +158,13 @@ function SignUp() {
               </div>
 
               <div className="mb-6">
-                <p className="text-sm mb-2 font-semibold">Password</p>
+                <p className="text-sm mb-2 font-semibold">
+                  {t("password")}
+                </p>
                 <input
                   type="password"
                   name="password"
-                  placeholder="Enter your password"
+                  placeholder={t("password")}
                   value={formik.values.password}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
@@ -215,29 +220,31 @@ function SignUp() {
                   formik.isSubmitting ? "opacity-50 cursor-not-allowed" : ""
                 }`}
               >
-                {formik.isSubmitting ? "Signing Up..." : "Sign Up"}
+                {formik.isSubmitting
+                  ? t("signing_up")
+                  : t("signup_button")}
               </button>
 
-              <div className="divider">OR</div>
+              <div className="divider">{t("or")}</div>
 
               <div className="flex w-full max-w-md gap-4 mb-4">
                 <button className="flex-1 btn bg-white text-black border-[#e5e5e5] h-12">
-                  Login with Google
+                  {t("login_google")}
                 </button>
                 <button className="flex-1 btn bg-black text-white border-black h-12">
-                  Login with Apple
+                  {t("login_apple")}
                 </button>
               </div>
 
               <div className="w-full flex justify-center mb-10 md:mb-0 mt-10">
                 <p className="font-sans font-bold text-sm text-center px-10">
-                  Already have an account?{" "}
+                  {t("already_account")}{" "}
                   <button
                     onClick={handleSignIn}
                     className="text-blue-600 underline hover:text-blue-800"
                     type="button"
                   >
-                    Sign In
+                    {t("sign_in")}
                   </button>
                 </p>
               </div>

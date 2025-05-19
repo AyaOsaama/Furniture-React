@@ -64,6 +64,8 @@ import { api } from "../axios/axios";
 export const fetchAllProducts = async () => {
   try {
     const response = await api.get("/products");
+    console.log(response.data);
+    
     return response.data;
   } catch (error) {
     console.error("Error fetching products:", error);
@@ -94,6 +96,8 @@ export const fetchAllCategories = async () => {
 export const fetchAllPosts = async () => {
   try {
     const res = await api.get("/posts");
+console.log(`all posts :`, res.data);
+
     return res.data;
   } catch (error) {
     console.error("Error fetching posts:", error);
@@ -103,7 +107,10 @@ export const fetchAllPosts = async () => {
 
 export const fetchPostById = async (id) => {
   try {
+
     const response = await api.get(`/posts/${id}`);
+    console.log(` post :`, response .data);
+
     return response.data;
   } catch (error) {
     console.error("Error fetching post:", error);
